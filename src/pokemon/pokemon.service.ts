@@ -4,6 +4,8 @@ import { isValidObjectId, Model } from 'mongoose';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Pokemon } from './entities/pokemon.entity';
+import { IsString } from 'class-validator';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
@@ -21,8 +23,17 @@ export class PokemonService {
       this.handleExecption(error);
     }
   }
+  
+  async createMany(createPokemonDto: { name: string, no: number }[]) {
+    await this.pokemonModel.insertMany(createPokemonDto);
+  }
 
-  findAll() {
+  async deleteAll() {
+    await this.pokemonModel.deleteMany({});
+  }
+
+  async findAll({ limit, offset }: PaginationDto) {
+    return this.pokemonModel.find().limit(limit).skip(offset).sort({ no: 1 }).select('-__v');
     //return this.pokemonModel.findAll;
   }
 
@@ -68,7 +79,7 @@ export class PokemonService {
     //const pokemon = await this.findOne(id);
     //const pokemon = await this.pokemonModel.findByIdAndDelete(id);
     const { deletedCount } = await this.pokemonModel.deleteOne({ _id: id });
-    if(deletedCount === 0){
+    if (deletedCount === 0) {
       throw new BadRequestException(`the 'id' ${id} has not found in our DB`);
     }
     return `The pokemon with 'id' ${id} has ben removed`;

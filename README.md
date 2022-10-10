@@ -23,16 +23,27 @@ $ npm i -g @nestjs/cli
 $ docker-compose up -d
 ```
 
+5. Iniciara el servidor 
+
+```
+$ yarn start:dev
+```
+
+6. Poblar la base de datos con la semilla
+
+```
+http://localhost:3000/api/v2/seed 
+```
 ## Stack usado
 
 * MongoDB
 * Nest
+* Axios 0.27.2 (La última versión 1.1.2 da problemas)
 
 ## Stay in touch
 
 - Author - Antony Delgado
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+
 
 ## License
 

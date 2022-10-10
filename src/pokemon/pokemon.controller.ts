@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -14,8 +15,9 @@ export class PokemonController {
   }
 
   @Get()
-  findAll() {
-    return this.pokemonService.findAll();
+  findAll(@Query() { limit = 10, offset = 0 }: PaginationDto) {
+    console.log(`${limit} ${offset}`);
+    return this.pokemonService.findAll({limit, offset});
   }
 
   @Get(':term')
@@ -29,7 +31,7 @@ export class PokemonController {
   }
 
   @Delete(':id')
-  remove(@Param('id' , ParseMongoIdPipe) id: string) {
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.pokemonService.remove(id);
   }
 }
